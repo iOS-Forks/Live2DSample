@@ -201,7 +201,7 @@ extension Live2DViewController: MetalViewDelegate {
         let screenRect = UIScreen.main.bounds
         let width = Float(screenRect.size.width)
         let height = Float(screenRect.size.height)
-        let bgFile = "res/back_class_normal.png"
+        let bgFile = "res/room_003.png"
         live2DManager.createBackground(width, height: height, file: bgFile)
     }
 
