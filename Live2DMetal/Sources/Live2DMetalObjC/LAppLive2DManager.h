@@ -25,6 +25,12 @@
 
 - (id)initWithResourcesPath:(NSString*)resourcesPath modelName:(NSString*)modelName;
 
+// add by andforce
+- (void)createBackground:(float)width height:(float)height file:(NSString*)name;
+
+- (void)renderBackground:(id<MTLRenderCommandEncoder>)renderEncoder;
+// end
+
 /**
  * @brief   画面をドラッグしたときの処理
  *

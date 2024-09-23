@@ -11,8 +11,12 @@
 #import "LAppPal.h"
 #import <Rendering/Metal/CubismRenderer_Metal.hpp>
 #import "Rendering/Metal/CubismRenderingInstanceSingleton_Metal.h"
+#import "LAppTextureManager.h"
+#import "LAppSprite.h"
 
-@implementation LAppLive2DManager
+@implementation LAppLive2DManager {
+    LAppSprite *_back; //背景画像
+}
 
 static LAppLive2DManager* s_instance = nil;
 
@@ -44,6 +48,34 @@ void FinishedMotion(Csm::ACubismMotion* self)
     }
     return self;
 }
+
+// add by andforce
+- (void)createBackground:(float)width height:(float)height file:(NSString*)name {
+    LAppTextureManager* textureManager = [LAppTextureManager getInstance];
+    std::string file_name([name UTF8String]);
+    
+    TextureInfo* backgroundTexture = [textureManager createTextureFromPngFile:file_name];
+    float x = width * 0.5f;
+    float y = height * 0.5f;
+        // 计算宽度和高度的缩放比例
+    float scaleWidth = width / backgroundTexture->width;
+    float scaleHeight = height / backgroundTexture->height;
+    
+    // 选择较大的缩放比例，以确保图片填满屏幕
+    float scale = MAX(scaleWidth, scaleHeight);
+    // 根据背景图片的尺寸和缩放比例计算背景图片的实际尺寸
+
+    float fWidth = static_cast<float>(backgroundTexture->width * scale);
+    float fHeight = static_cast<float>(backgroundTexture->height * scale);
+    _back = [[LAppSprite alloc] initWithX:x Y:y Width:fWidth Height:fHeight MaxWidth:width MaxHeight:height Texture:backgroundTexture->id];
+}
+
+- (void)renderBackground:(id<MTLRenderCommandEncoder>)renderEncoder {
+    if (_back) {
+        [_back renderImmidiate:renderEncoder];
+    }
+}
+// end
 
 - (void)onDragX:(Csm::csmFloat32)x y:(Csm::csmFloat32)y
 {

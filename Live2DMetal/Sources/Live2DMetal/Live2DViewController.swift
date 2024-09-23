@@ -197,6 +197,12 @@ extension Live2DViewController: MetalViewDelegate {
         depthTexture = device.makeTexture(descriptor: depthTextureDescriptor)
 
         resizeScreen()
+        
+        let screenRect = UIScreen.main.bounds
+        let width = Float(screenRect.size.width)
+        let height = Float(screenRect.size.height)
+        let bgFile = "res/back_class_normal.png"
+        live2DManager.createBackground(width, height: height, file: bgFile)
     }
 
     public func render(to layer: CAMetalLayer) {
@@ -216,6 +222,8 @@ extension Live2DViewController: MetalViewDelegate {
             descriptor: renderPassDescriptor
         ) else { return }
 
+        live2DManager.renderBackground(renderEncoder)
+        
         renderEncoder.endEncoding()
 
         live2DManager.setViewMatrix(&viewMatrix)
